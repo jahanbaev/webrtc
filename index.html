@@ -1,27 +1,54 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Pinball Test</title>
+    <title>test aplication</title>
 <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
 <script src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js'></script>
 <script>
+
+var swt = false;
+ var elem;
+ var ps = 1;
+function arst(){
+  if(ps == 1){
+      if(swt == true){
+          document.getElementById("control").innerText = "stop";
+    elem.play();
+    ps=0;
+}  }else{
+    document.getElementById("control").innerText = "start";
+ps=1;
+elem.pause();
+elem.currentTime = 0;
+    }
+    }
     window.onload = function() {
         AFRAME.registerComponent('videohandler', {
             init: function () {
-                var marker = this.el;
+var marker = this.el;
 
                 this.vid = document.querySelector("#vid");
+                
+                elem = this.vid;
 
                 marker.addEventListener('markerFound', function () {
-                    this.vid.play();
+                   // this.vid.play();
+                   swt = true;
+                   document.getElementsByClassName("but")[0].style = "display:flex"
                 }.bind(this));
-    
+
 		marker.addEventListener('markerLost', function() {
 			this.vid.pause();
 			this.vid.currentTime = 0;
+			document.getElementById("control").innerText = "start";
+ps=1;
+			swt = false;
+			document.getElementsByClassName("but")[0].style = "display:none"
 		}.bind(this));
+    
+    
+    
             }
         });
     };
@@ -46,39 +73,60 @@
         font-size: 1.25em;
         color: white;
     }
+    .but{
+         height: 30%;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+    button{
+        border-radius:50%;
+        height:70px;
+        width:70px;
+    }
 </style>
 </head>
 
 <body style='margin : 0px; overflow: hidden;'>
     <div class="arjs-loader">
-        <div>Loading, please wait...</div>
+        <div>Loading...</div>
     </div>
+    <div class="but"><button onclick="arst(1)" id="control">play</button></div>
     <a-scene
         vr-mode-ui="enabled: false;"
         renderer='antialias: true; alpha: true; precision: mediump;'
         embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
 
         <a-assets>
-            <video src="https://cors-anywhere.herokuapp.com/https://www.w3schools.com/html/mov_bbb.mp4"
+            <video src="https://wbbuilder.000webhostapp.com/miyagi.mp4"
                 preload="auto" id="vid" response-type="arraybuffer" loop
-                crossorigin webkit-playsinline autoplay muted playsinline>
+                crossorigin webkit-playsinline autoplay playsinline>
             </video>
         </a-assets>
 
         <a-nft
             videohandler
-            type='nft' url='https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/data/dataNFT/pinball'
+            type='nft' 
+             url="data/240px-JavaScript-logo"
             smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5"
         >
             <a-video
                 src="#vid"
-                position='50 150 -100'
-                width='300'
-                height='175'
+               position='0 0 -100'
+                rotation='90 0 180'
+                width='100'
+                height='190'
                 >
             </a-video>
         </a-nft>
-		<a-entity camera></a-entity>
-	</a-scene>
+    <a-entity camera></a-entity>
+  </a-scene>
+  
 </body>
 </html>
